@@ -245,7 +245,7 @@ form {
 
 
 /* GENERAL ELEMENT TYPE STYLES */
-/**
+
 h1 {
   font-size: 32px;
 } 
@@ -279,7 +279,7 @@ h6 {
   font-size: .8em;
   color: #303030;
 } 
-*/
+
 p {
   font-weight: 300;
   margin-bottom: 20px;
