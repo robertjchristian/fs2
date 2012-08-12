@@ -438,7 +438,7 @@ public abstract class AbstractAPITest {
 
   @Test
   public void testCopy() throws Exception {
-    
+
     FlexibleStorageSystem fs2 = getFS2Instance();
 
     /**

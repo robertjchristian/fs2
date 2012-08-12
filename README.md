@@ -1,18 +1,28 @@
-FS2
+[FS2](http://robertjchristian/github.com/fs2)
 ====
-Flexible Storage System - URI-centric Middleware API for accessing data residing anywhere.
+[Flexible Storage System](http://robertjchristian/github.com/fs2) - Middleware Object Storage API.  Store your data anywhere, and move it at any time, with no client code impact.
 
 What is FS2?
 ============================
-...
+FS2 allows you to manage arbitrary data objects using familiar operations like create, read, update, and delete. Using a simple interface that abstracts the underlying persistence details, applications can interact with their data in a way similar to using
+a terminal to interact with a local filesystem. Behind the curtains, a storage provider does the heavy lifting, be it integrating with a cloud storage provider like Google Cloud Storage
+or Amazon S3, a Mongo NoSQL database, a fileshare, or even MemCache.
 
 Why FS2?
 ============================
+There are similar technologies out there such as Apache Commons Virtual File System (VFS) and Apache Jackrabbit.  FS2 distinguishes itself with the following:
+* FS2 Objects are relatively simple, having a URI, headers, and a blob.  This makes it a natural fit to map and handle web requests.
+* Storage-agnostic API.  Client code does not know about the underlying persistence store.  For example, a VFS URL make look like jar:/a/b, where fs2 is simply fs2:/a/b/.
+* TDD friendly.  Use the default FS2 repo (in-memory) while developing for easy testing without minding the complexities of database/filesystem stores.  Then when the code is ready for prime time, simply flip a switch (ie change "mem" to "mongo"), and objects will be persisted.
+* Lightweight dependencies.  The core FS2 API code is lightweight, and for any given deployment scenario, you need only to include the concrete repository that will be used.
+* Built-in tests.  It's easy to have confidence in a new concrete repository implementation when you can plug it right into an existing test framework.
+* Less config.  By default, FS2 stores objects in memory, and there is zero configuration required.
+* Easier config.  FS2 is not going to require heaps of XML files defining factories in order to work.  Just override the default values you wish to change, in code or by providing a properties file in json format.
+* Leaves the typical "heavyweightness" of Java frameworks behind.  IE uses json for config and object descriptors, relies on default values so the only existing configuration is override configuration.
 
 Prerequisites
 ============================
 * JDK6 or greater.
-
 
 How to build
 ============================
