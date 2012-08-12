@@ -17,14 +17,8 @@ Prerequisites
 How to build
 ============================
 
-With Ant
-====
-from fs2, run "ant"
-
-In Eclipse
-===
-_The fs2 module is committed to git with Eclipse project settings (.project/.classpath) at the root.  So getting started is as easy as_
-File->Import->General->Existing Projects into Workspace->Next->Select Root Directory-Browse->Select fs2
+... With Ant
+... In Eclipse
 
 Tests
 ============================
