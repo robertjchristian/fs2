@@ -10,14 +10,6 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.fs2.api.CoreFS2Utils;
-import com.fs2.api.FS2Factory;
-import com.fs2.api.FS2MetaSnapshot;
-import com.fs2.api.FS2ObjectAlreadyExistsException;
-import com.fs2.api.FS2ObjectHeaders;
-import com.fs2.api.FS2PayloadNotFoundException;
-import com.fs2.api.FlexibleStorageSystem;
-
 /**
  * Positive case exercise of the FS2 API.
  * 
@@ -66,14 +58,18 @@ public abstract class AbstractAPITest {
 
   @Test
   public void testBasicListChildren() throws Exception {
-
+    String expectedPath = "fs2:/foo/bar";
+    
     // basic test... should list child and not grandchild
     FS2MetaSnapshot foo = FS2.createObjectEntry("/foo");
     FS2.createObjectEntry("/foo/bar");
     FS2.createObjectEntry("/foo/bar/bat");
 
     Set<URI> rs = FS2.listChildrenURIs(foo.getURI());
-    assertTrue(rs.size() == 1 && rs.toArray()[0].toString().equals("fs2:/foo/bar"));
+    
+    String firstPath = rs.iterator().next().toString();
+    assertTrue("Expected \"" + expectedPath + "\" but got " + firstPath + " instead.", 
+            rs.size() == 1 && firstPath.equals(expectedPath));
   }
 
   @Test
@@ -98,7 +94,7 @@ public abstract class AbstractAPITest {
 
     // list descendants of foo whose names begin with "m" (expect moo)
     Set<FS2MetaSnapshot> fooDescendants = FS2.listDescendants(foo, ".*/m.*");
-    assertTrue(fooDescendants.size() == 1);
+    assertTrue("Expected size of 1 but got size of " + fooDescendants.size() + " instead.", fooDescendants.size() == 1);
     assertTrue(fooDescendants.iterator().next().getURI().toString().endsWith("/moo"));
 
     // also test no filter (expect all four returned)
@@ -247,7 +243,8 @@ public abstract class AbstractAPITest {
     // here so we should see the same result as if we called listChildren
     // without a filter
     Set<URI> rs = FS2.listChildrenURIs(baz.getURI(), ".*");
-    assertTrue(rs.size() == 3 && rs.contains(moo.getURI()) && rs.contains(boo.getURI()) && rs.contains(mar.getURI()));
+    assertTrue("size = " + rs.size() + ", moo = " + moo.getURI() + ", boo = " + boo.getURI() + ", mar = " + mar.getURI(),
+            rs.size() == 3 && rs.contains(moo.getURI()) && rs.contains(boo.getURI()) && rs.contains(mar.getURI()));
 
     // now test for baz children ending with letters oo, expecting just moo and
     // boo
@@ -347,7 +344,7 @@ public abstract class AbstractAPITest {
 
     // match nodes named foo
     rs = FS2.listDescendantURIs(root, ".*/foo");
-    assertTrue(rs.size() == 3);
+    assertTrue("Expected size = 3 but got " + rs.size() + " instead.", rs.size() == 3);
 
     // match nodes named baz
     rs = FS2.listDescendantURIs(root, ".*/baz");

@@ -255,6 +255,7 @@ public final class FileStorageProvider implements FS2StorageProvider {
   protected URI makeURIReference(File f) {
     // ie convert /tmp/fs2/a/b/c to fs2:/a/b/c
     String relativePath = f.getAbsolutePath().replace(mountPoint.getAbsolutePath(), "");
+    relativePath = relativePath.replace("\\", "/");
     URI u = CoreFS2Utils.genURIFromPath(relativePath);
     return u;
   }
