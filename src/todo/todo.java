@@ -1,5 +1,9 @@
+package todo;
 /**
- * FS2 To Do List:
+ * FS2 To Do List: 
+ * 
+ * Written as Java class so it shows on ToDo tab within Eclipse.  
+ * Exclude when archiving!
  * 
  * TODO Consider adding support for encryption and zip of payloads
  * 
@@ -49,6 +53,6 @@
  * 
  **/
 
-public interface ToDo {
+public interface todo {
   // This class contains JavaDoc comments for high level/roadmap TO DO's...
 }
