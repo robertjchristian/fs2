@@ -36,11 +36,6 @@ public class FlexibleStorageSystemImpl implements FlexibleStorageSystem {
   }
 
   @Override
-  public FS2MetaSnapshot addHeader(FS2MetaSnapshot m, String key, String value) throws FS2Exception {
-    return addHeader(m.getURI(), key, value);
-  }
-
-  @Override
   public FS2MetaSnapshot addHeader(URI uri, String key, String value) {
     try {
       validateURI(uri);
@@ -84,11 +79,6 @@ public class FlexibleStorageSystemImpl implements FlexibleStorageSystem {
   }
 
   @Override
-  public void delete(FS2MetaSnapshot m) throws FS2Exception {
-    delete(m.getURI());
-  }
-
-  @Override
   public void delete(URI uri) throws FS2Exception {
     try {
       URI safeURI = CoreFS2Utils.ensureNoTrailingSlash(uri);
@@ -99,19 +89,10 @@ public class FlexibleStorageSystemImpl implements FlexibleStorageSystem {
   }
 
   @Override
-  public void deletePayload(FS2MetaSnapshot m) {
-    deletePayload(m.getURI());
-  }
-
-  @Override
   public void deletePayload(URI uri) {
     sp.deletePayload(uri);
   }
 
-  @Override
-  public void deleteRecursive(FS2MetaSnapshot m) throws FS2Exception {
-    deleteRecursive(m.getURI());
-  }
 
   @Override
   public void deleteRecursive(URI uri) throws FS2Exception {
@@ -140,15 +121,6 @@ public class FlexibleStorageSystemImpl implements FlexibleStorageSystem {
     } catch (Throwable t) {
       throw new RuntimeException("Failed to create new instance of " + fqn, t);
     }
-  }
-
-  @Override
-  public boolean exists(FS2MetaSnapshot... meta) throws FS2Exception {
-    Set<URI> uris = new HashSet<URI>();
-    for (FS2MetaSnapshot m : meta) {
-      uris.add(m.getURI());
-    }
-    return exists(uris.toArray(new URI[] {}));
   }
 
   @Override
@@ -200,11 +172,6 @@ public class FlexibleStorageSystemImpl implements FlexibleStorageSystem {
   }
 
   @Override
-  public InputStream getFS2PayloadInputStream(FS2MetaSnapshot m) throws FS2PayloadNotFoundException {
-    return getFS2PayloadInputStream(m.getURI());
-  }
-
-  @Override
   public InputStream getFS2PayloadInputStream(URI uri) throws FS2PayloadNotFoundException {
     try {
       // TODO make uniform parameter and method names
@@ -213,20 +180,10 @@ public class FlexibleStorageSystemImpl implements FlexibleStorageSystem {
       throw new FS2PayloadNotFoundException(uri, e);
     }
   }
-
-  @Override
-  public OutputStream getFS2PayloadOutputStream(FS2MetaSnapshot m) throws FS2Exception {
-    return getFS2PayloadOutputStream(m.getURI());
-  }
-
+ 
   @Override
   public OutputStream getFS2PayloadOutputStream(URI uri) throws FS2Exception {
     return sp.fetchFS2PayloadOutputStream(uri);
-  }
-
-  @Override
-  public String[] getHeader(FS2MetaSnapshot m, String key) throws FS2Exception {
-    return getHeader(m.getURI(), key);
   }
 
   @Override
@@ -235,28 +192,13 @@ public class FlexibleStorageSystemImpl implements FlexibleStorageSystem {
   }
 
   @Override
-  public Set<String> getHeaderNames(FS2MetaSnapshot m) throws FS2Exception {
-    return getHeaderNames(m.getURI());
-  }
-
-  @Override
   public Set<String> getHeaderNames(URI uri) throws FS2Exception {
     return fetchObject(uri).getHeaderNames();
   }
 
   @Override
-  public FS2ObjectHeaders getHeaders(FS2MetaSnapshot m) throws FS2Exception {
-    return getHeaders(m.getURI());
-  }
-
-  @Override
   public FS2ObjectHeaders getHeaders(URI uri) throws FS2Exception {
     return fetchObject(uri).getHeaders();
-  }
-
-  @Override
-  public long getPayloadSizeInBytes(FS2MetaSnapshot m) throws FS2Exception {
-    return getPayloadSizeInBytes(m.getURI());
   }
 
   @Override
@@ -360,11 +302,6 @@ public class FlexibleStorageSystemImpl implements FlexibleStorageSystem {
   }
 
   @Override
-  public byte[] readPayloadToBytes(FS2MetaSnapshot m) {
-    return readPayloadToBytes(m.getURI());
-  }
-
-  @Override
   public byte[] readPayloadToBytes(URI uri) {
     try {
       InputStream is = getFS2PayloadInputStream(uri);
@@ -396,18 +333,8 @@ public class FlexibleStorageSystemImpl implements FlexibleStorageSystem {
   }
 
   @Override
-  public void writePayloadFromBytes(FS2MetaSnapshot m, byte[] bytes) {
-    writePayloadFromBytes(m.getURI(), bytes);
-  }
-
-  @Override
   public void writePayloadFromBytes(URI uri, byte[] bytes) {
     writePayloadFromStream(uri, new ByteArrayInputStream(bytes));
-  }
-
-  @Override
-  public void writePayloadFromStream(FS2MetaSnapshot m, InputStream is) {
-    writePayloadFromStream(m.getURI(), is);
   }
 
   @Override
@@ -471,16 +398,6 @@ public class FlexibleStorageSystemImpl implements FlexibleStorageSystem {
   }
 
   @Override
-  public Set<FS2MetaSnapshot> listDescendants(FS2MetaSnapshot meta, String filter) throws FS2Exception {
-    return listDescendants(meta.getURI(), filter);
-  }
-
-  @Override
-  public Set<FS2MetaSnapshot> listDescendants(FS2MetaSnapshot meta) throws FS2Exception {
-    return listDescendants(meta, null);
-  }
-
-  @Override
   public void copy(URI fromURI, URI toURI) {
     sp.copy(fromURI, toURI);
   }
@@ -491,8 +408,8 @@ public class FlexibleStorageSystemImpl implements FlexibleStorageSystem {
   }
 
   @Override
-  public void updateHeaders(FS2MetaSnapshot m, FS2ObjectHeaders h) throws FS2Exception {
-    sp.setHeaders(m.getURI(), h);
+  public void updateHeaders(URI u, FS2ObjectHeaders h) throws FS2Exception {
+    sp.setHeaders(u, h);
   }
 
 }

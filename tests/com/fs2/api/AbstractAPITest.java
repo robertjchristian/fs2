@@ -41,11 +41,11 @@ public abstract class AbstractAPITest {
   public void testBasicCreateAndDelete() throws Exception {
     // create a new entry and assert it exists
     FS2MetaSnapshot m = FS2.createObjectEntry("/foo");
-    assertTrue(FS2.exists(m));
+    assertTrue(FS2.exists(m.getURI()));
 
     // delete it, and assert it does not exist
-    FS2.delete(m);
-    assertFalse(FS2.exists(m));
+    FS2.delete(m.getURI());
+    assertFalse(FS2.exists(m.getURI()));
   }
 
   @Test
@@ -53,15 +53,15 @@ public abstract class AbstractAPITest {
 
     // create a new entry and assert it exists
     FS2MetaSnapshot m = FS2.createObjectEntry("/test/fetch/by/path");
-    assertTrue(FS2.exists(m));
+    assertTrue(FS2.exists(m.getURI()));
 
     // also make sure it can be fetched by path
     m = FS2.fetchObject("/test/fetch/by/path");
     assertTrue(null != m); // actually throws, so we wouldn't see this
 
     // delete it, and assert it does not exist
-    FS2.delete(m);
-    assertFalse(FS2.exists(m));
+    FS2.delete(m.getURI());
+    assertFalse(FS2.exists(m.getURI()));
   }
 
   @Test
@@ -79,10 +79,10 @@ public abstract class AbstractAPITest {
   @Test
   public void testCreateAndDelete() throws Exception {
     FS2MetaSnapshot m = FS2.createObjectEntry("/foo");
-    assertTrue(FS2.exists(m));
+    assertTrue(FS2.exists(m.getURI()));
 
-    FS2.delete(m);
-    assertFalse(FS2.exists(m));
+    FS2.delete(m.getURI());
+    assertFalse(FS2.exists(m.getURI()));
 
   }
 
@@ -97,19 +97,19 @@ public abstract class AbstractAPITest {
     FS2MetaSnapshot bar = nodes[1];
 
     // list descendants of foo whose names begin with "m" (expect moo)
-    Set<FS2MetaSnapshot> fooDescendants = FS2.listDescendants(foo, ".*/m.*");
+    Set<FS2MetaSnapshot> fooDescendants = FS2.listDescendants(foo.getURI(), ".*/m.*");
     assertTrue(fooDescendants.size() == 1);
     assertTrue(fooDescendants.iterator().next().getURI().toString().endsWith("/moo"));
 
     // also test no filter (expect all four returned)
-    fooDescendants = FS2.listDescendants(foo, null);
+    fooDescendants = FS2.listDescendants(foo.getURI(), null);
     assertTrue(fooDescendants.size() == 4);
 
     // delete bar and bar/bam
-    FS2.deleteRecursive(bar);
+    FS2.deleteRecursive(bar.getURI());
 
     // get foo's remaining descendants. (expect just baz)
-    Set<FS2MetaSnapshot> d = FS2.listDescendants(nodes[0]);
+    Set<FS2MetaSnapshot> d = FS2.listDescendants(nodes[0].getURI());
     assertTrue(d.size() == 1);
 
     // refetch baz
@@ -129,21 +129,21 @@ public abstract class AbstractAPITest {
     FS2MetaSnapshot f = FS2.createObjectEntry("/root/C/E/F");
 
     // sanity check their existence
-    assertTrue(FS2.exists(root, a, b, c, d, e, f));
+    assertTrue(FS2.exists(root.getURI(), a.getURI(), b.getURI(), c.getURI(), d.getURI(), e.getURI(), f.getURI()));
 
     // delete node e and assert that both e and f are deleted
-    FS2.deleteRecursive(e);
-    assertFalse(FS2.exists(e, f));
-    assertTrue(FS2.exists(root, a, b, c, d)); // sanity
+    FS2.deleteRecursive(e.getURI());
+    assertFalse(FS2.exists(e.getURI(), f.getURI()));
+    assertTrue(FS2.exists(root.getURI(), a.getURI(), b.getURI(), c.getURI(), d.getURI())); // sanity
 
     // delete node c and make sure c and all of its descendants are deleted
-    FS2.deleteRecursive(c);
-    assertFalse(FS2.exists(c, d, e, f));
-    assertTrue(FS2.exists(root, a, b)); // sanity
+    FS2.deleteRecursive(c.getURI());
+    assertFalse(FS2.exists(c.getURI(), d.getURI(), e.getURI(), f.getURI()));
+    assertTrue(FS2.exists(root.getURI(), a.getURI(), b.getURI())); // sanity
 
     // delete root and make sure all are gone
-    FS2.deleteRecursive(root);
-    assertFalse(FS2.exists(root, a, b, c, d, e, f));
+    FS2.deleteRecursive(root.getURI());
+    assertFalse(FS2.exists(root.getURI(), a.getURI(), b.getURI(), c.getURI(), d.getURI(), e.getURI(), f.getURI()));
 
   }
 
@@ -156,11 +156,11 @@ public abstract class AbstractAPITest {
     FS2MetaSnapshot c = FS2.createObjectEntry("/root/A/B/C");
 
     // sanity check their existence
-    assertTrue(FS2.exists(root, a, b, c));
+    assertTrue(FS2.exists(root.getURI(), a.getURI(), b.getURI(), c.getURI()));
 
     // test delete with child
     try {
-      FS2.delete(b);
+      FS2.delete(b.getURI());
       fail("Expected that delete b fails because b has a child (c).");
     } catch (Exception exception) {
       // expected
@@ -168,15 +168,15 @@ public abstract class AbstractAPITest {
 
     // test delete with child and descendants
     try {
-      FS2.delete(root);
+      FS2.delete(root.getURI());
       fail("Expected that delete root fails because root has descendants (a, b, c).");
     } catch (Exception exception) {
       // expected
     }
 
     // test delete recursive
-    FS2.deleteRecursive(b);
-    FS2.deleteRecursive(root);
+    FS2.deleteRecursive(b.getURI());
+    FS2.deleteRecursive(root.getURI());
 
   }
 
@@ -184,19 +184,19 @@ public abstract class AbstractAPITest {
   public void testDeleteWithPayload() throws Exception {
     // create a new entry and assert it exists
     FS2MetaSnapshot m = FS2.createObjectEntry("/foo");
-    assertTrue(FS2.exists(m));
+    assertTrue(FS2.exists(m.getURI()));
 
     // create a payload, assert that it exists and that contents are as expected
-    FS2.writePayloadFromBytes(m, "foo".getBytes());
-    assertTrue(new String(FS2.readPayloadToBytes(m)).equals("foo"));
+    FS2.writePayloadFromBytes(m.getURI(), "foo".getBytes());
+    assertTrue(new String(FS2.readPayloadToBytes(m.getURI())).equals("foo"));
 
-    FS2.delete(m);
-    assertFalse(FS2.exists(m));
+    FS2.delete(m.getURI());
+    assertFalse(FS2.exists(m.getURI()));
 
     // TODO create a child and test delete fail / delete recursive
 
     try {
-      FS2.getFS2PayloadInputStream(m);
+      FS2.getFS2PayloadInputStream(m.getURI());
       fail("Expected exception... " + m + " should not exist.");
     } catch (FS2PayloadNotFoundException e) {
       // expected
@@ -215,15 +215,15 @@ public abstract class AbstractAPITest {
     FS2MetaSnapshot b = tree[2];
 
     // add a custom field to object root
-    FS2.addHeader(root, "isContainer", "true");
+    FS2.addHeader(root.getURI(), "isContainer", "true");
 
     // add contents to B
     // note that if we were using a non-memory storage provider,
     // we would use the stream interface here instead
-    FS2.writePayloadFromBytes(b, "hello world".getBytes());
+    FS2.writePayloadFromBytes(b.getURI(), "hello world".getBytes());
 
     // delete everything we just created
-    FS2.deleteRecursive(root);
+    FS2.deleteRecursive(root.getURI());
 
   }
 
@@ -266,20 +266,20 @@ public abstract class AbstractAPITest {
 
     // create object with headers and payload
     FS2MetaSnapshot m = FS2.createObjectEntry("/foo");
-    FS2.addHeader(m, "a", "b");
-    FS2.writePayloadFromBytes(m, "payload".getBytes());
-    assertTrue(new String(FS2.readPayloadToBytes(m)).equals("payload"));
+    FS2.addHeader(m.getURI(), "a", "b");
+    FS2.writePayloadFromBytes(m.getURI(), "payload".getBytes());
+    assertTrue(new String(FS2.readPayloadToBytes(m.getURI())).equals("payload"));
 
     // test read headers
-    String[] mh = FS2.getHeader(m, "a");
+    String[] mh = FS2.getHeader(m.getURI(), "a");
     assertTrue(mh[0].equals("b"));
-    Set<String> names = FS2.getHeaderNames(m);
+    Set<String> names = FS2.getHeaderNames(m.getURI());
     assertTrue(names.contains("a"));
     assertTrue(names.size() == 1);
 
     // test multiple headers (order not guaranteed)
-    FS2.addHeader(m, "a", "c");
-    String[] values = FS2.getHeader(m, "a");
+    FS2.addHeader(m.getURI(), "a", "c");
+    String[] values = FS2.getHeader(m.getURI(), "a");
 
     // note: see the difference between refetching from persistence store,
     // and querying the object itself... here we refetch
@@ -288,26 +288,26 @@ public abstract class AbstractAPITest {
     // test remove headers
 
     // get the original headers
-    FS2ObjectHeaders h = FS2.getHeaders(m);
+    FS2ObjectHeaders h = FS2.getHeaders(m.getURI());
     h.removeHeader("a"); // overwrite/remove
 
     // update
-    FS2.updateHeaders(m, h);
+    FS2.updateHeaders(m.getURI(), h);
 
-    assertTrue(FS2.getHeaderNames(m).size() == 0);
+    assertTrue(FS2.getHeaderNames(m.getURI()).size() == 0);
 
     // test remove payload
-    FS2.deletePayload(m);
+    FS2.deletePayload(m.getURI());
 
     try {
-      FS2.getFS2PayloadInputStream(m);
+      FS2.getFS2PayloadInputStream(m.getURI());
       fail("Expected exception obtaining payload.");
     } catch (Exception e) {
       // expected
     }
 
     // cleanup
-    FS2.delete(m);
+    FS2.delete(m.getURI());
   }
 
   @Test
@@ -364,7 +364,7 @@ public abstract class AbstractAPITest {
 
     // create entry and add payload
     FS2MetaSnapshot m = FS2.createObjectEntry("/foo");
-    FS2.writePayloadFromBytes(m, "xyz".getBytes());
+    FS2.writePayloadFromBytes(m.getURI(), "xyz".getBytes());
 
     // move it
     URI newURI = CoreFS2Utils.createObjectURI("bar", "mars");
@@ -372,15 +372,15 @@ public abstract class AbstractAPITest {
     FS2.move(m.getURI(), newURI);
 
     // old entry should be gone
-    assertFalse(FS2.exists(m));
+    assertFalse(FS2.exists(m.getURI()));
 
     // test entry and payload exist at new location
     m = FS2.fetchObject(newURI);
     assertNotNull(m);
-    assertTrue(new String(FS2.readPayloadToBytes(m)).equals("xyz"));
+    assertTrue(new String(FS2.readPayloadToBytes(m.getURI())).equals("xyz"));
 
     // cleanup
-    FS2.delete(m);
+    FS2.delete(m.getURI());
 
   }
 
@@ -401,8 +401,8 @@ public abstract class AbstractAPITest {
     }
 
     // cleanup
-    FS2.delete(m);
-    FS2.delete(m2);
+    FS2.delete(m.getURI());
+    FS2.delete(m2.getURI());
   }
 
   // this tests not only move with descendants but implicitly the implicit
@@ -430,9 +430,9 @@ public abstract class AbstractAPITest {
     assertNotNull(doo);
 
     // cleanup
-    FS2.delete(bar);
-    FS2.delete(doo);
-    FS2.delete(foo);
+    FS2.delete(bar.getURI());
+    FS2.delete(doo.getURI());
+    FS2.delete(foo.getURI());
 
   }
 
@@ -450,11 +450,11 @@ public abstract class AbstractAPITest {
 
     // create headers on f9
     FS2MetaSnapshot f9 = fileMeta[2];
-    fs2.addHeader(f9, "name", "f9");
+    fs2.addHeader(f9.getURI(), "name", "f9");
 
     // create payload on f11
     FS2MetaSnapshot f11 = fs2.fetchObject("f1/f11");
-    fs2.writePayloadFromBytes(f11, "HelloWorld".getBytes());
+    fs2.writePayloadFromBytes(f11.getURI(), "HelloWorld".getBytes());
 
     /**
      * STEP 2: Copy fs2:/f1 to fs2:/copy
