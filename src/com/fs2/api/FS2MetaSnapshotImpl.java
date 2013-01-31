@@ -23,6 +23,8 @@ public class FS2MetaSnapshotImpl implements FS2MetaSnapshot {
   // time this object was initially created
   protected Date createdOn;
 
+  protected String createdBy;
+  
   // time this object was fetched, and this snapshot was taken (time of last
   // read by FS2)
   protected Date snapshotCreatedOn;
@@ -42,20 +44,26 @@ public class FS2MetaSnapshotImpl implements FS2MetaSnapshot {
   }
 
   // convenience
-  public FS2MetaSnapshotImpl(URI uri, Date createdOn) {
-    this(uri, createdOn, new FS2ObjectHeaders());
+  public FS2MetaSnapshotImpl(URI uri, Date createdOn, String createdBy) {
+    this(uri, createdOn, createdBy, new FS2ObjectHeaders());
   }
 
-  public FS2MetaSnapshotImpl(URI uri, Date createdOn, FS2ObjectHeaders headers) {
+  public FS2MetaSnapshotImpl(URI uri, Date createdOn, String createdBy, FS2ObjectHeaders headers) {
     this.uri = uri;
     headers = null == headers.clone() ? new FS2ObjectHeaders() : headers;
     this.headers = headers;
+    this.createdBy = createdBy;
     snapshotCreatedOn = new Date();
   }
 
   @Override
   public Date createdOn() {
     return createdOn;
+  }
+  
+  @Override
+  public String createdBy() {
+    return createdBy;
   }
 
   @Override

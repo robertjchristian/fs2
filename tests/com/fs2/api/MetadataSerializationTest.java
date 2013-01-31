@@ -25,7 +25,7 @@ public class MetadataSerializationTest extends TestCase {
 
     FS2ObjectHeaders headers = new FS2ObjectHeaders();
     headers.addHeader("foo", "bar");
-    FS2MetaSnapshotImpl foo = new FS2MetaSnapshotImpl(uri, new Date(), headers);
+    FS2MetaSnapshotImpl foo = new FS2MetaSnapshotImpl(uri, new Date(), this.getName(), headers);
 
     String s = foo.toJSON();
 

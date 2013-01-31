@@ -55,7 +55,7 @@ public final class FileStorageProvider implements FS2StorageProvider {
 
   @Override
   public FS2MetaSnapshot createObjectEntry(URI uri) throws FS2ObjectAlreadyExistsException {
-    FS2MetaSnapshotImpl meta = new FS2MetaSnapshotImpl(uri, new Date());
+    FS2MetaSnapshotImpl meta = new FS2MetaSnapshotImpl(uri, new Date(), getClass().getName());
     return createObjectEntry(uri, meta.toJSON(), (InputStream) null);
   }
 
@@ -344,7 +344,7 @@ public final class FileStorageProvider implements FS2StorageProvider {
       // delete and revert?)
       // * lots of unanswered questions at this moment...
       FS2MetaSnapshot m = fetchObjectMeta(toURI);
-      m = new FS2MetaSnapshotImpl(toURI, new Date(), m.getHeaders());
+      m = new FS2MetaSnapshotImpl(toURI, new Date(), getClass().getName(), m.getHeaders());
       updateObjectMeta(toURI, m.toJSON());
 
       // make sure to do the same for all sub directories recursive
@@ -353,7 +353,7 @@ public final class FileStorageProvider implements FS2StorageProvider {
       Set<URI> d = listDescendants(toURI);
       for (URI u : d) {
         m = fetchObjectMeta(u); // fetch and clone, adjusting for the new URI
-        m = new FS2MetaSnapshotImpl(u, new Date(), m.getHeaders());
+        m = new FS2MetaSnapshotImpl(u, new Date(), getClass().getName(), m.getHeaders());
         updateObjectMeta(u, m.toJSON());
       }
 

@@ -21,8 +21,6 @@ public interface FlexibleStorageSystem {
 
   String FS2_URI_SCHEME = "fs2";
 
-  FS2MetaSnapshot addHeader(FS2MetaSnapshot m, String key, String value) throws FS2Exception;
-
   FS2MetaSnapshot addHeader(URI uri, String key, String value) throws FS2Exception;
 
   // convenience, expects complete path
@@ -41,22 +39,14 @@ public interface FlexibleStorageSystem {
 
   FS2MetaSnapshot createObjectEntry(URI uri, String jsonMeta, InputStream payload) throws FS2Exception;
 
-  void delete(FS2MetaSnapshot m) throws FS2Exception;
-
   // delete node pointed to by uri
   void delete(URI uri) throws FS2Exception;
-
-  void deletePayload(FS2MetaSnapshot m);
 
   // remove only the payload
   void deletePayload(URI uri);
 
-  void deleteRecursive(FS2MetaSnapshot m) throws FS2Exception;
-
   // call delete on all descendants, then on this uri
   void deleteRecursive(URI uri) throws FS2Exception;
-
-  boolean exists(FS2MetaSnapshot... meta) throws FS2Exception;
 
   boolean exists(String... uriPaths) throws FS2Exception;
 
@@ -66,11 +56,7 @@ public interface FlexibleStorageSystem {
 
   FS2MetaSnapshot fetchObject(String path) throws FS2Exception;
 
-  InputStream getFS2PayloadInputStream(FS2MetaSnapshot m) throws FS2PayloadNotFoundException;
-
   InputStream getFS2PayloadInputStream(URI uri) throws FS2PayloadNotFoundException;
-
-  OutputStream getFS2PayloadOutputStream(FS2MetaSnapshot m) throws FS2Exception;
 
   OutputStream getFS2PayloadOutputStream(URI uri) throws FS2Exception;
 
@@ -86,19 +72,7 @@ public interface FlexibleStorageSystem {
    * @return unbound <b>SNAPSHOT</b> of headers (to update, use updateHeaders
    *         function)
    */
-  String[] getHeader(FS2MetaSnapshot m, String key) throws FS2Exception;
-
-  /**
-   * @return unbound <b>SNAPSHOT</b> of headers (to update, use updateHeaders
-   *         function)
-   */
   String[] getHeader(URI uri, String key) throws FS2Exception;
-
-  /**
-   * @return unbound <b>SNAPSHOT</b> of headers (to update, use updateHeaders
-   *         function)
-   */
-  Set<String> getHeaderNames(FS2MetaSnapshot m) throws FS2Exception;
 
   /**
    * @return unbound <b>SNAPSHOT</b> of headers (to update, use updateHeaders
@@ -107,21 +81,13 @@ public interface FlexibleStorageSystem {
   Set<String> getHeaderNames(URI uri) throws FS2Exception;
 
   /**
-   * @return unbound <b>SNAPSHOT</b> of headers (to update, use updateHeaders
-   *         function)
-   */
-  FS2ObjectHeaders getHeaders(FS2MetaSnapshot m) throws FS2Exception;
-
-  /**
    * Use this to affect the underlying object
    * 
    * @param m
    * @param h
    * @throws FS2Exception
    */
-  void updateHeaders(FS2MetaSnapshot m, FS2ObjectHeaders h) throws FS2Exception;
-
-  long getPayloadSizeInBytes(FS2MetaSnapshot m) throws FS2Exception;
+  void updateHeaders(URI u, FS2ObjectHeaders h) throws FS2Exception;
 
   long getPayloadSizeInBytes(URI uri) throws FS2Exception;
 
@@ -136,11 +102,7 @@ public interface FlexibleStorageSystem {
   Set<FS2MetaSnapshot> listDescendants(URI uri) throws FS2Exception;
 
   Set<FS2MetaSnapshot> listDescendants(URI uri, String filter) throws FS2Exception;
-
-  Set<FS2MetaSnapshot> listDescendants(FS2MetaSnapshot meta, String filter) throws FS2Exception;
-
-  Set<FS2MetaSnapshot> listDescendants(FS2MetaSnapshot meta) throws FS2Exception;
-
+  
   Set<URI> listDescendantURIs(URI uri) throws FS2Exception;
 
   Set<URI> listDescendantURIs(URI uri, String filter) throws FS2Exception;
@@ -148,15 +110,9 @@ public interface FlexibleStorageSystem {
   // move object from one uri to another
   void move(URI oldURI, URI newURI) throws FS2Exception;
 
-  byte[] readPayloadToBytes(FS2MetaSnapshot m);
-
   byte[] readPayloadToBytes(URI uri);
 
-  void writePayloadFromBytes(FS2MetaSnapshot m, byte[] bytes);
-
   void writePayloadFromBytes(URI uri, byte[] bytes);
-
-  void writePayloadFromStream(FS2MetaSnapshot m, InputStream is);
 
   void writePayloadFromStream(URI uri, InputStream is);
 

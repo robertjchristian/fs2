@@ -50,11 +50,11 @@ class MemoryMetadataImpl extends FS2MetaSnapshotImpl {
 
   // copy constructor
   public MemoryMetadataImpl(FS2MetaSnapshot ms) {
-    super(ms.getURI(), ms.createdOn(), ms.getHeaders());
+    super(ms.getURI(), ms.createdOn(), "MemoryStorageProvider", ms.getHeaders());
   }
 
   public MemoryMetadataImpl(URI uri, Date creationDate, FS2ObjectHeaders headers, Long payloadSize) {
-    super(uri, creationDate, headers);
+    super(uri, creationDate, "MemoryStorageProvider", headers);
   }
 
   protected void addHeader(String key, String value) {

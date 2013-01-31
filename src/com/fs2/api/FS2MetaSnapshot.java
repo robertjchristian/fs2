@@ -17,6 +17,8 @@ public interface FS2MetaSnapshot {
 
   Date createdOn();
 
+  String createdBy();
+  
   void dump(PrintStream printStream);
 
   // obtain a single header

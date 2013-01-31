@@ -1,9 +1,9 @@
 package todo;
 /**
+ * 
  * FS2 To Do List: 
  * 
  * Written as Java class so it shows on ToDo tab within Eclipse.  
- * Exclude when archiving!
  * 
  * TODO Consider adding support for encryption and zip of payloads
  * 
@@ -16,8 +16,6 @@ package todo;
  * TODO consider using Apache Commons VFS
  * http://commons.apache.org/vfs/filesystems.html to create concrete
  * repositories for FTP/S, HTTP/S, SFTP and WebDAV
- * 
- * TODO Add created by to meta
  * 
  * TODO Check before throwing so that we aren't wrapping with the same type.
  * 
@@ -35,8 +33,6 @@ package todo;
  * TODO Stress, load, and concurrency test.
  * 
  * TODO meta to json not printing out dates, payload size, etc
- * 
- * TODO Create Ant build script.
  * 
  * TODO Combine validate uri with ensure no trailing slash, and make sure it is
  * called first on every call to this object to vet uri syntax and
