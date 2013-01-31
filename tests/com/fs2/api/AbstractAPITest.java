@@ -87,6 +87,19 @@ public abstract class AbstractAPITest {
   }
 
   @Test
+  public void testCreateNoNameProvided() throws Exception {
+
+    // sometimes we want to create an object but don't care abut the object name
+    // like in the case of temp storage
+    FS2MetaSnapshot node = FS2.createObjectEntry();
+    
+    // make sure exists
+    assertTrue(FS2.exists(node.getURI()));
+    
+    FS2.delete(node.getURI());    
+  }
+  
+  @Test
   public void testGroupCreate() throws Exception {
 
     // create five nodes

@@ -26,6 +26,10 @@ public interface FlexibleStorageSystem {
   // convenience, expects complete path
   FS2MetaSnapshot createObjectEntry(String path) throws FS2Exception;
 
+  // convenience, allows for creation when don't care about naming
+  // ie for temp storage
+  FS2MetaSnapshot createObjectEntry() throws FS2Exception;
+  
   // convenience, create many entries at once. return array of entries ordered
   // same as parameter list.
   // inherently creates missing nodes along the path

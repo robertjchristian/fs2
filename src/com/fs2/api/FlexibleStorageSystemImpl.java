@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -410,6 +411,13 @@ public class FlexibleStorageSystemImpl implements FlexibleStorageSystem {
   @Override
   public void updateHeaders(URI u, FS2ObjectHeaders h) throws FS2Exception {
     sp.setHeaders(u, h);
+  }
+
+  @Override
+  public FS2MetaSnapshot createObjectEntry() throws FS2Exception {
+    // TODO ensure unique, offer facility for tmp?  
+    // TODO ie with cleanup after thread dies?  or client manages?
+    return createObjectEntry("/" + UUID.randomUUID().toString());
   }
 
 }
